@@ -36,7 +36,9 @@
             List<string> rows = File.ReadAllText(path).Split('\n').ToList();
 
             this.Headers = rows.First().Split(separators).ToList();
-            this.Content = rows.Skip(1).Select(s => s.Split(separators).ToList()).ToList();
+            this.Content = rows.Skip(1)
+                .Where(s => !string.IsNullOrEmpty(s))
+                .Select(s => s.Split(separators).ToList()).ToList();
         }
     }
 }
