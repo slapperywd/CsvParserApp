@@ -1,4 +1,6 @@
-﻿namespace CsvParserApp
+﻿using System;
+
+namespace CsvParserApp
 {
     using System.Collections.Generic;
     using System.IO;
@@ -33,13 +35,14 @@
                 throw new FileNotFoundException();
             }
 
-            List<string> rows = File.ReadAllText(path).Split('\n').ToList();
+            var rows = File.ReadAllText(path)
+                .Split(new[] { Environment.NewLine }, StringSplitOptions.None)
+                .ToList();
 
             this.Headers = rows.First().Split(separators).ToList();
             this.Content = rows.Skip(1)
                 .Where(s => !string.IsNullOrEmpty(s))
-                .Select(s => s.Split(separators).ToList())
-                .ToList();
+                .Select(s => s.Split(separators).ToList()).ToList();
         }
     }
 }
