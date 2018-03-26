@@ -15,12 +15,9 @@ namespace CsvParserApp
                 Console.WriteLine(header);
             }
 
-            foreach (var row in csvParser.Content)
+            foreach (var row in csvParser)
             {
-                foreach (var cell in row)
-                {
-                    Console.WriteLine(cell);
-                }
+                
             }
         }
     }
