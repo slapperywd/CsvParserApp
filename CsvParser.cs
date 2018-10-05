@@ -28,7 +28,7 @@ namespace CsvParserApp
         /// </summary>
         /// <param name="path">path including file name</param>
         /// <param name="columnDelimiter">column separator</param>
-        public void Parse(string path, char columnDelimiter = ',')
+        public CsvParser Parse(string path, char columnDelimiter = ',')
         {
             var separator = new char[] { columnDelimiter };
 
@@ -43,7 +43,7 @@ namespace CsvParserApp
                 .Split(new[] { Environment.NewLine }, StringSplitOptions.None)
                 .ToList();
 
-            this.Headers = rows.First().Split(separator).ToList();
+            this.Headers = rows.First().Split(separator).Select(h => h.Trim()).ToList();
             this.Content = rows.Skip(1)
                 .Where(s => !string.IsNullOrEmpty(s))
                 .Select(s => new DataRow { Columns = this.Headers, Row = regexp.Split(s, Headers.Count).ToList() })
@@ -51,6 +51,8 @@ namespace CsvParserApp
 
             // clean up the fields (remove quotes " " and leading spaces)
             this.Content.ForEach(dr => dr.Row = dr.Row.Select(s => s = s.TrimStart(' ', '"').TrimEnd('"', ' ')).ToList());
+
+            return this;
         }
 
         public IEnumerator<DataRow> GetEnumerator()
