@@ -21,7 +21,7 @@ namespace CsvParserApp
         /// <summary>
         /// Contains all rows without header
         /// </summary>
-        private List<DataRow> Content { get; set; }
+        private List<DataRow> Rows { get; set; }
 
         /// <summary>
         /// Parses csv located in specified path separated by commas by default
@@ -44,20 +44,20 @@ namespace CsvParserApp
                 .ToList();
 
             this.Headers = rows.First().Split(separator).Select(h => h.Trim()).ToList();
-            this.Content = rows.Skip(1)
+            this.Rows = rows.Skip(1)
                 .Where(s => !string.IsNullOrEmpty(s))
                 .Select(s => new DataRow { Columns = this.Headers, Row = regexp.Split(s, Headers.Count).ToList() })
                 .ToList();
 
             // clean up the fields (remove quotes " " and leading spaces)
-            this.Content.ForEach(dr => dr.Row = dr.Row.Select(s => s = s.TrimStart(' ', '"').TrimEnd('"', ' ')).ToList());
+            this.Rows.ForEach(dr => dr.Row = dr.Row.Select(s => s = s.TrimStart(' ', '"').TrimEnd('"', ' ')).ToList());
 
             return this;
         }
 
         public IEnumerator<DataRow> GetEnumerator()
         {
-            return this.Content.GetEnumerator();
+            return this.Rows.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
